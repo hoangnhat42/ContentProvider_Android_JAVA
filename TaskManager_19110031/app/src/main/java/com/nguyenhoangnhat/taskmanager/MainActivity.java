@@ -1,5 +1,6 @@
 package com.nguyenhoangnhat.taskmanager;
 
+import android.app.Dialog;
 import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.CursorLoader;
@@ -19,7 +20,9 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -27,16 +30,17 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    ContactsAdapter adapter;
+    TasksAdapter adapter;
     RecyclerView rv_list;
+    Button btnEdit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        rv_list = (RecyclerView) findViewById(R.id.contact_list);
+        ImageButton btnEdit = (ImageButton) findViewById(R.id.btnEdit);
+        rv_list = (RecyclerView) findViewById(R.id.task_list);
         rv_list.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         rv_list.setLayoutManager(new LinearLayoutManager(this));
 
@@ -44,53 +48,61 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         setSupportActionBar(toolbar);
         getLoaderManager().initLoader(0, null, this);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 LayoutInflater li = LayoutInflater.from(MainActivity.this);
-                View getEmpIdView = li.inflate(R.layout.dialog_contact_details, null);
+                View getEmpIdView = li.inflate(R.layout.dialog_task_details, null);
 
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
 
-                // set dialog_contact_details.xml to alertdialog builder
+                // set dialog_task_details.xml to alertdialog builder
                 alertDialogBuilder.setView(getEmpIdView);
 
-                final EditText nameInput = (EditText) getEmpIdView.findViewById(R.id.editTextDialogNameInput);
-                final EditText phoneInput = (EditText) getEmpIdView.findViewById(R.id.editTextDialogPhoneInput);
+                final EditText titleInput = (EditText) getEmpIdView.findViewById(R.id.editTextDialogTitleInput);
+                final EditText descriptionInput = (EditText) getEmpIdView.findViewById(R.id.editTextDialogDescriptionInput);
                 // set dialog message
 
                 alertDialogBuilder
-                        .setCancelable(false)
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                alertDialogBuilder.setCancelable(true);
+                            }
+                        })
+
                         .setPositiveButton("Add", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 // get user input and set it to result
                                 // edit text
-                                insertContact(nameInput.getText().toString(), phoneInput.getText().toString());
+                                insertTask(titleInput.getText().toString(), descriptionInput.getText().toString());
                                 restartLoader();
 
                             }
                         }).create()
                         .show();
-
             }
         });
+
+
+
     }
 
 
-    private void insertContact(String contactName, String contactPhone) {
+    private void insertTask(String title, String description) {
         ContentValues values = new ContentValues();
-        values.put(DBOpenHelper.CONTACT_NAME, contactName);
-        values.put(DBOpenHelper.CONTACT_PHONE, contactPhone);
-        Uri contactUri = getContentResolver().insert(ContactsProvider.CONTENT_URI, values);
-        Toast.makeText(this, "Created Contact " + contactName, Toast.LENGTH_LONG).show();
+        values.put(DBOpenHelper.TITLE, title);
+        values.put(DBOpenHelper.DESCRIPTION, description);
+        Uri taskUri = getContentResolver().insert(TasksProvider.CONTENT_URI, values);
+        Toast.makeText(this, "Created Task " + title, Toast.LENGTH_LONG).show();
     }
 
-    private void deleteAllContacts() {
+    private void deleteAllTasks() {
 
-        getContentResolver().delete(ContactsProvider.CONTENT_URI, null, null);
+        getContentResolver().delete(TasksProvider.CONTENT_URI, null, null);
         restartLoader();
-        Toast.makeText(this, "All Contacts Deleted", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "All Tasks Deleted", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -106,8 +118,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
-            case R.id.deleteAllContacts:
-                deleteAllContacts();
+            case R.id.deleteAllTasks:
+                deleteAllTasks();
                 return true;
         }
 
@@ -121,27 +133,27 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        return new CursorLoader(this, ContactsProvider.CONTENT_URI, null, null, null, null);
+        return new CursorLoader(this, TasksProvider.CONTENT_URI, null, null, null, null);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 
-        List<Contact> list = new ArrayList<>();
+        List<Task> list = new ArrayList<>();
 
         while (cursor.moveToNext()) {
-            int index1 = cursor.getColumnIndex(DBOpenHelper.CONTACT_NAME);
-            int index2 = cursor.getColumnIndex(DBOpenHelper.CONTACT_PHONE);
+            int index1 = cursor.getColumnIndex(DBOpenHelper.TITLE);
+            int index2 = cursor.getColumnIndex(DBOpenHelper.DESCRIPTION);
 
 
-            String name = cursor.getString(index1);
-            String phone_no = cursor.getString(index2);
+            String title = cursor.getString(index1);
+            String description = cursor.getString(index2);
 
-            Contact contact = new Contact(name, phone_no);
-            list.add(contact);
+            Task task = new Task(title, description);
+            list.add(task);
         }
 
-        adapter = new ContactsAdapter(this, list);
+        adapter = new TasksAdapter(this, list);
         rv_list.setAdapter(adapter);
 
     }

@@ -11,21 +11,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="@string/enter_contact_details"
+        android:text="@string/enter_task_details"
         android:textSize="20sp"
         android:textStyle="bold" />
 
     <EditText
-        android:id="@+id/editTextDialogNameInput"
+        android:id="@+id/editTextDialogTitleInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/enterName" />
+        android:hint="@string/enterTitle" />
 
 
     <EditText
-        android:id="@+id/editTextDialogPhoneInput"
+        android:id="@+id/editTextDialogDescriptionInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/enterPhoneNumber" />
+        android:hint="@string/enterDescription" />
 
 </LinearLayout>

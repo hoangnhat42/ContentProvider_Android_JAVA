@@ -10,20 +10,20 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 
-public class ContactsProvider extends ContentProvider {
+public class TasksProvider extends ContentProvider {
 
     private static final String AUTHORITY = "com.nguyenhoangnhat.taskmanager";
-    private static final String BASE_PATH = "contacts";
+    private static final String BASE_PATH = "tasks";
     public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + BASE_PATH);
 
-    private static final int CONTACTS = 1;
-    private static final int CONTACT_ID = 2;
+    private static final int TASKS = 1;
+    private static final int TASK_ID = 2;
 
     private static final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
     static {
-        uriMatcher.addURI(AUTHORITY, BASE_PATH, CONTACTS);
-        uriMatcher.addURI(AUTHORITY, BASE_PATH + "/#", CONTACT_ID);
+        uriMatcher.addURI(AUTHORITY, BASE_PATH, TASKS);
+        uriMatcher.addURI(AUTHORITY, BASE_PATH + "/#", TASK_ID);
     }
 
     private SQLiteDatabase database;
@@ -40,9 +40,9 @@ public class ContactsProvider extends ContentProvider {
     public Cursor query(Uri uri, String[] strings, String s, String[] strings1, String s1) {
         Cursor cursor;
         switch (uriMatcher.match(uri)) {
-            case CONTACTS:
-                cursor = database.query(DBOpenHelper.TABLE_CONTACTS, DBOpenHelper.ALL_COLUMNS,
-                        s, null, null, null, DBOpenHelper.CONTACT_NAME + " ASC");
+            case TASKS:
+                cursor = database.query(DBOpenHelper.TABLE_TASKS, DBOpenHelper.ALL_COLUMNS,
+                        s, null, null, null, DBOpenHelper.TITLE + " ASC");
 
 
                 break;
@@ -59,8 +59,8 @@ public class ContactsProvider extends ContentProvider {
     public String getType(Uri uri) {
 
         switch (uriMatcher.match(uri)) {
-            case CONTACTS:
-                return "vnd.android.cursor.dir/contacts";
+            case TASKS:
+                return "vnd.android.cursor.dir/tasks";
             default:
                 throw new IllegalArgumentException("This is an Unknown URI " + uri);
         }
@@ -69,7 +69,7 @@ public class ContactsProvider extends ContentProvider {
     @Nullable
     @Override
     public Uri insert(Uri uri, ContentValues contentValues) {
-        long id = database.insert(DBOpenHelper.TABLE_CONTACTS, null, contentValues);
+        long id = database.insert(DBOpenHelper.TABLE_TASKS, null, contentValues);
 
         if (id > 0) {
             Uri _uri = ContentUris.withAppendedId(CONTENT_URI, id);
@@ -85,8 +85,8 @@ public class ContactsProvider extends ContentProvider {
     public int delete(Uri uri, String s, String[] strings) {
         int delCount = 0;
         switch (uriMatcher.match(uri)) {
-            case CONTACTS:
-                delCount = database.delete(DBOpenHelper.TABLE_CONTACTS, s, strings);
+            case TASKS:
+                delCount = database.delete(DBOpenHelper.TABLE_TASKS, s, strings);
                 break;
             default:
                 throw new IllegalArgumentException("This is an Unknown URI " + uri);
@@ -99,8 +99,8 @@ public class ContactsProvider extends ContentProvider {
     public int update(Uri uri, ContentValues contentValues, String s, String[] strings) {
         int updCount = 0;
         switch (uriMatcher.match(uri)) {
-            case CONTACTS:
-                updCount = database.update(DBOpenHelper.TABLE_CONTACTS, contentValues, s, strings);
+            case TASKS:
+                updCount = database.update(DBOpenHelper.TABLE_TASKS, contentValues, s, strings);
                 break;
             default:
                 throw new IllegalArgumentException("This is an Unknown URI " + uri);

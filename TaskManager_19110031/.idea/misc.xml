@@ -8,8 +8,12 @@
         <entry key="..\:/NguyenHoangNhat_19110031_ContentProvider/TaskManager_19110031/app/src/main/res/drawable-v24/ic_baseline_delete_24.xml" value="0.161" />
         <entry key="..\:/NguyenHoangNhat_19110031_ContentProvider/TaskManager_19110031/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.161" />
         <entry key="..\:/NguyenHoangNhat_19110031_ContentProvider/TaskManager_19110031/app/src/main/res/drawable/ic_launcher_background.xml" value="0.161" />
-        <entry key="..\:/NguyenHoangNhat_19110031_ContentProvider/TaskManager_19110031/app/src/main/res/layout/activity_main.xml" value="0.21041666666666667" />
+        <entry key="..\:/NguyenHoangNhat_19110031_ContentProvider/TaskManager_19110031/app/src/main/res/layout/activity_main.xml" value="0.264" />
         <entry key="..\:/NguyenHoangNhat_19110031_ContentProvider/TaskManager_19110031/app/src/main/res/layout/contact_list_item.xml" value="0.536" />
+        <entry key="..\:/NguyenHoangNhat_19110031_ContentProvider/TaskManager_19110031/app/src/main/res/layout/dialog_contact_details.xml" value="0.25" />
+        <entry key="..\:/NguyenHoangNhat_19110031_ContentProvider/TaskManager_19110031/app/src/main/res/layout/dialog_task_details.xml" value="0.2" />
+        <entry key="..\:/NguyenHoangNhat_19110031_ContentProvider/TaskManager_19110031/app/src/main/res/layout/task_list_item.xml" value="0.4" />
+        <entry key="..\:/NguyenHoangNhat_19110031_ContentProvider/TaskManager_19110031/app/src/main/res/menu/menu_main.xml" value="0.10989583333333333" />
         <entry key="..\:/contentprovider/MyContacts/app/src/main/res/drawable/ic_launcher_background.xml" value="0.121" />
         <entry key="..\:/contentprovider/MyContacts/app/src/main/res/layout/activity_main.xml" value="0.10989583333333333" />
         <entry key="..\:/contentprovider/MyContacts/app/src/main/res/layout/contact_list_item.xml" value="0.264" />

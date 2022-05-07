@@ -23,7 +23,7 @@
 
     <provider
         android:authorities="com.nguyenhoangnhat.taskmanager"
-        android:name="com.nguyenhoangnhat.taskmanager.ContactsProvider"
+        android:name="com.nguyenhoangnhat.taskmanager.TasksProvider"
         android:exported="true"
         android:readPermission="com.nguyenhoangnhat.taskmanager.READ_DATABASE"
         android:writePermission="com.nguyenhoangnhat.taskmanager.WRITE_DATABASE"
