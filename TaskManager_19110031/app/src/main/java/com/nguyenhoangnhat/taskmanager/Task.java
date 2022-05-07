@@ -1,14 +1,26 @@
 package com.nguyenhoangnhat.taskmanager;
 
 public class Task {
+    private int ID;
+
+    public Task(int ID, String title, String description) {
+        this.ID = ID;
+        this.title = title;
+        this.description = description;
+    }
+
+    public int getID() {
+        return ID;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
+    }
 
     private String title;
     private String description;
 
-    public Task(String title, String description) {
-        this.title = title;
-        this.description = description;
-    }
+
 
     public String getTitle() {
         return title;

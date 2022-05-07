@@ -105,14 +105,33 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         Toast.makeText(this, "All Tasks Deleted", Toast.LENGTH_LONG).show();
     }
 
-    private void updateTask(String title, String description) {
+    private void updateTask(int id, String title, String description) {
         ContentValues values = new ContentValues();
-        values.put(DBOpenHelper.TITLE, title);
         values.put(DBOpenHelper.DESCRIPTION, description);
-            getContentResolver().update(TasksProvider.CONTENT_URI, values, null, null);
+        values.put(DBOpenHelper.TITLE, title);
 
-        Toast.makeText(this, "Updated Task " + title, Toast.LENGTH_LONG).show();
+
+        int rowUpdate = getContentResolver().update(
+                TasksProvider.CONTENT_URI, values,DBOpenHelper.TASK_ID+" = "+id,null);
+        if(rowUpdate>0) {
+            Toast.makeText(this, "Updated Task " + title, Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(this, "Can't Update Task " + title, Toast.LENGTH_LONG).show();
+        }
+
     }
+
+    private void deleteTasksID(int id, String title) {
+
+        int rowDelete = getContentResolver().delete(TasksProvider.CONTENT_URI, DBOpenHelper.TASK_ID+" = "+id, null);
+        restartLoader();
+        if(rowDelete>0) {
+            Toast.makeText(this, "Delete Task " + title, Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(this, "Can't Delete Task " + title, Toast.LENGTH_LONG).show();
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -150,14 +169,15 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         List<Task> list = new ArrayList<>();
 
         while (cursor.moveToNext()) {
+            int index0 = cursor.getColumnIndex(DBOpenHelper.TASK_ID);
             int index1 = cursor.getColumnIndex(DBOpenHelper.TITLE);
             int index2 = cursor.getColumnIndex(DBOpenHelper.DESCRIPTION);
 
-
+            int id = cursor.getInt(index0);
             String title = cursor.getString(index1);
             String description = cursor.getString(index2);
 
-            Task task = new Task(title, description);
+            Task task = new Task(id, title, description);
             list.add(task);
         }
 
@@ -195,11 +215,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                     }
                 })
 
-                .setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Update", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // get user input and set it to result
                         // edit text
-                        updateTask(titleInput.getText().toString(), descriptionInput.getText().toString());
+                        updateTask(task.getID(), titleInput.getText().toString(), descriptionInput.getText().toString());
                         restartLoader();
 
                     }

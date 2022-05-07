@@ -45,10 +45,11 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.ViewHolder> 
             }
         });
 
+
         holder.btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                deleteTasksID(item.getID(), item.getTitle());
             }
         });
     }
@@ -69,6 +70,18 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.ViewHolder> 
             description = itemView.findViewById(R.id.descriptionTextView);
             btnEdit = itemView.findViewById(R.id.btnEdit);
             btnDelete = itemView.findViewById(R.id.btnDelete);
+        }
+    }
+
+
+
+    private void deleteTasksID(int id, String title) {
+
+        int rowDelete = mContext.getContentResolver().delete(TasksProvider.CONTENT_URI, DBOpenHelper.TASK_ID+" = "+id, null);
+        if(rowDelete>0) {
+            Toast.makeText(mContext, "Delete Task " + title, Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(mContext, "Can't Delete Task " + title, Toast.LENGTH_LONG).show();
         }
     }
 }
