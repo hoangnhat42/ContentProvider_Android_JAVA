@@ -9,12 +9,16 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 public class TasksProvider extends ContentProvider {
 
     private static final String AUTHORITY = "com.nguyenhoangnhat.taskmanager";
     private static final String BASE_PATH = "tasks";
     public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + BASE_PATH);
+
+    static final String _ID = "_id";
+    static final String VALUE = "task";
 
     private static final int TASKS = 1;
     private static final int TASK_ID = 2;
@@ -101,6 +105,11 @@ public class TasksProvider extends ContentProvider {
         switch (uriMatcher.match(uri)) {
             case TASKS:
                 updCount = database.update(DBOpenHelper.TABLE_TASKS, contentValues, s, strings);
+                break;
+            case TASK_ID:
+                updCount = database.update(DBOpenHelper.TABLE_TASKS, contentValues,
+                        _ID + " = " + uri.getPathSegments().get(1) +
+                                (!TextUtils.isEmpty(s) ? "AND (" + s + ')' : ""), strings);
                 break;
             default:
                 throw new IllegalArgumentException("This is an Unknown URI " + uri);

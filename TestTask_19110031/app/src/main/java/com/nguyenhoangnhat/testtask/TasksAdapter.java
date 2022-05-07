@@ -9,17 +9,15 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 
-import com.nguyenhoangnhat.testtask.R;
-
 import java.util.List;
 
-public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHolder> {
+public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.ViewHolder> {
 
 
     Context mContext;
-    private List<Contact> items;
+    private List<Task> items;
 
-    public ContactsAdapter(Context mContext, List<Contact> items) {
+    public TasksAdapter(Context mContext, List<Task> items) {
         this.mContext = mContext;
         this.items = items;
     }
@@ -27,15 +25,15 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(mContext).inflate(R.layout.contact_list_item, parent, false);
+        View v = LayoutInflater.from(mContext).inflate(R.layout.task_list_item, parent, false);
         return new ViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder( ViewHolder holder, int position) {
-        Contact item = items.get(position);
-       holder.phone_no.setText(item.getContact_phone());
-        holder.name.setText(item.getContact_name());
+        Task item = items.get(position);
+       holder.description.setText(item.getDescription());
+        holder.title.setText(item.getTitle());
 
     }
 
@@ -45,13 +43,13 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView name;
-        public TextView phone_no;
+        public TextView title;
+        public TextView description;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            name = (TextView) itemView.findViewById(R.id.nameTextView);
-            phone_no = (TextView) itemView.findViewById(R.id.phoneTextView);
+            title =  itemView.findViewById(R.id.titleTextView);
+            description = itemView.findViewById(R.id.descriptionTextView);
         }
     }
 }

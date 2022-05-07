@@ -16,24 +16,22 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 
-import com.nguyenhoangnhat.testtask.R;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener {
 
-    ContactsAdapter adapter;
+    TasksAdapter adapter;
     RecyclerView rv_list;
     FloatingActionButton fab;
 
     private static final String AUTHORITY = "com.nguyenhoangnhat.taskmanager";
-    private static final String BASE_PATH = "contacts";
+    private static final String BASE_PATH = "tasks";
     public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + BASE_PATH);
 
     // Constant to identify the requested operation
-    private static final int CONTACTS = 1;
-    private static final int CONTACT_ID = 2;
+    private static final int TASKS = 1;
+    private static final int TASK_ID = 2;
 
     private boolean firstTimeLoaded = false;
 
@@ -41,8 +39,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private static final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
     static {
-        uriMatcher.addURI(AUTHORITY, BASE_PATH, CONTACTS);
-        uriMatcher.addURI(AUTHORITY, BASE_PATH + "/#", CONTACT_ID);
+        uriMatcher.addURI(AUTHORITY, BASE_PATH, TASKS);
+        uriMatcher.addURI(AUTHORITY, BASE_PATH + "/#", TASK_ID);
     }
 
     @Override
@@ -50,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        rv_list = (RecyclerView) findViewById(R.id.contact_list);
+        rv_list = (RecyclerView) findViewById(R.id.task_list);
 
         rv_list.setLayoutManager(new LinearLayoutManager(this));
         rv_list.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
@@ -74,18 +72,18 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 
-        List<Contact> list = new ArrayList<>();
+        List<Task> list = new ArrayList<>();
 
         while (cursor.moveToNext()) {
 
-            String name = cursor.getString(1);
-            String phone_no = cursor.getString(2);
+            String title = cursor.getString(1);
+            String description = cursor.getString(2);
 
-            Contact contact = new Contact(name, phone_no);
-            list.add(contact);
+            Task task = new Task(title, description);
+            list.add(task);
         }
 
-        adapter = new ContactsAdapter(this, list);
+        adapter = new TasksAdapter(this, list);
         rv_list.setAdapter(adapter);
 
 

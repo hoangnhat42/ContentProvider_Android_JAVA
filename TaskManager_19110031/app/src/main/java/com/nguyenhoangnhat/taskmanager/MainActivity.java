@@ -28,19 +28,19 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, TransferData{
 
     TasksAdapter adapter;
     RecyclerView rv_list;
-    Button btnEdit;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ImageButton btnEdit = (ImageButton) findViewById(R.id.btnEdit);
         rv_list = (RecyclerView) findViewById(R.id.task_list);
+
         rv_list.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         rv_list.setLayoutManager(new LinearLayoutManager(this));
 
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         setSupportActionBar(toolbar);
         getLoaderManager().initLoader(0, null, this);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-
+        ImageButton btnEdit = (ImageButton) findViewById(R.id.btnEdit);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
 
 
-    }
+}
 
 
     private void insertTask(String title, String description) {
@@ -105,6 +105,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         Toast.makeText(this, "All Tasks Deleted", Toast.LENGTH_LONG).show();
     }
 
+    private void updateTask(String title, String description) {
+        ContentValues values = new ContentValues();
+        values.put(DBOpenHelper.TITLE, title);
+        values.put(DBOpenHelper.DESCRIPTION, description);
+            getContentResolver().update(TasksProvider.CONTENT_URI, values, null, null);
+
+        Toast.makeText(this, "Updated Task " + title, Toast.LENGTH_LONG).show();
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -163,4 +171,39 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     }
 
+    @Override
+    public void dataTransfer(Task task) {
+
+        LayoutInflater li = LayoutInflater.from(MainActivity.this);
+        View getEmpIdView = li.inflate(R.layout.dialog_task_details, null);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+
+        // set dialog_task_details.xml to alertdialog builder
+        alertDialogBuilder.setView(getEmpIdView);
+
+        final EditText titleInput = (EditText) getEmpIdView.findViewById(R.id.editTextDialogTitleInput);
+        final EditText descriptionInput = (EditText) getEmpIdView.findViewById(R.id.editTextDialogDescriptionInput);
+        titleInput.setText(task.getTitle());
+        descriptionInput.setText(task.getDescription());
+        // set dialog message
+
+        alertDialogBuilder
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        alertDialogBuilder.setCancelable(true);
+                    }
+                })
+
+                .setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // get user input and set it to result
+                        // edit text
+                        updateTask(titleInput.getText().toString(), descriptionInput.getText().toString());
+                        restartLoader();
+
+                    }
+                }).create()
+                .show();
+    }
 }
